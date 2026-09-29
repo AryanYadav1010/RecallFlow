@@ -1,0 +1,249 @@
+:root {
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  font-size: 12px;
+  color: #eef3ea;
+  --surface: rgba(29, 38, 33, 0.95);
+  --line: rgba(255, 255, 255, 0.1);
+  --muted: #9fb09f;
+  --record: #ef5b4f;
+  --ok: #8cc49a;
+  --warn: #e7b765;
+}
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+}
+* {
+  box-sizing: border-box;
+}
+.shell {
+  height: 100%;
+  padding: 6px;
+}
+.pill,
+.card {
+  -webkit-app-region: drag;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
+}
+.pill {
+  height: 48px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 7px 0 16px;
+}
+.card {
+  height: 100%;
+  border-radius: 16px;
+  padding: 12px 12px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+button,
+input {
+  -webkit-app-region: no-drag;
+  font: inherit;
+  color: inherit;
+}
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--record);
+  flex-shrink: 0;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dot,
+  .spin {
+    animation: none;
+  }
+}
+.elapsed {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  flex: 1;
+}
+.mic {
+  display: flex;
+  color: var(--muted);
+}
+.mic.on {
+  color: var(--ok);
+}
+.status-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+.ok {
+  color: var(--ok);
+  flex-shrink: 0;
+}
+.warn {
+  color: var(--warn);
+  flex-shrink: 0;
+}
+.spin {
+  color: var(--muted);
+  flex-shrink: 0;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  padding: 0 8px;
+}
+.control:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.control:focus-visible,
+.action:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--ok);
+  outline-offset: 1px;
+}
+.control.stop {
+  color: #ffd9d4;
+  background: rgba(239, 91, 79, 0.22);
+}
+.control.stop:hover,
+.control.stop.confirm {
+  background: var(--record);
+  color: white;
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+header .elapsed {
+  color: var(--muted);
+  font-weight: 500;
+}
+.title {
+  margin: 0;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  margin: 0;
+  font-size: 11px;
+}
+dt {
+  color: var(--muted);
+}
+dd {
+  margin: 0;
+  text-align: right;
+}
+dd.connected {
+  color: var(--ok);
+}
+dd.reconnecting,
+dd.waiting,
+dd.connecting,
+dd.unavailable {
+  color: var(--warn);
+}
+dd.failed,
+dd.disconnected {
+  color: var(--record);
+}
+.message {
+  margin: 0;
+  font-size: 11px;
+  color: var(--warn);
+  line-height: 1.4;
+  max-height: 32px;
+  overflow: hidden;
+}
+.actions {
+  display: flex;
+  gap: 6px;
+  margin-top: auto;
+}
+.action {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.action:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.action.primary {
+  background: #3d6b52;
+  border-color: transparent;
+}
+.actions .control.stop {
+  border-radius: 8px;
+}
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+}
+.note input {
+  width: 100%;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0 10px;
+  user-select: text;
+}
+.note-status {
+  margin: 0;
+  font-size: 11px;
+  color: var(--ok);
+}

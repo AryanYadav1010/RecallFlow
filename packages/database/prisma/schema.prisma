@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+  output = "../generated"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+model User {
+  id String @id @default(uuid()) @db.Uuid
+  email String? @unique
+  name String
+  createdAt DateTime @default(now())
+  meetings Meeting[]
+}
+model Meeting {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title String
+  template String @default("general")
+  status String @default("draft")
+  startedAt DateTime?
+  endedAt DateTime?
+  durationSeconds Int @default(0)
+  error String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  segments TranscriptSegment[]
+  notes RawNote?
+  summary MeetingSummary?
+  actions ActionItem[]
+  participants Participant[]
+  chat ChatMessage[]
+  @@index([userId, createdAt])
+  @@index([userId, status])
+}
+model TranscriptSegment {
+  id String @id @default(uuid()) @db.Uuid
+  meetingId String @db.Uuid
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  speaker String
+  text String
+  startTimeMs Int
+  endTimeMs Int
+  confidence Float
+  createdAt DateTime @default(now())
+  actions ActionItem[]
+  @@index([meetingId, startTimeMs])
+}
+model RawNote {
+  id String @id @default(uuid()) @db.Uuid
+  meetingId String @unique @db.Uuid
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model MeetingSummary {
+  id String @id @default(uuid()) @db.Uuid
+  meetingId String @unique @db.Uuid
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  overview String
+  detailedNotes String
+  suggestedFollowUp String
+  topics Json
+  decisions Json
+  questions Json
+  risks Json
+  importantFacts Json
+  extraction Json
+  createdAt DateTime @default(now())
+}
+model ActionItem {
+  id String @id @default(uuid()) @db.Uuid
+  meetingId String @db.Uuid
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  description String
+  owner String?
+  dueDate String?
+  status String @default("open")
+  evidenceSegmentIds Json
+  sourceTranscriptSegmentId String? @db.Uuid
+  source TranscriptSegment? @relation(fields: [sourceTranscriptSegmentId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  @@index([meetingId])
+}
+model Participant {
+  id String @id @default(uuid()) @db.Uuid
+  meetingId String @db.Uuid
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  name String
+  email String?
+  @@index([meetingId])
+}
+model ChatMessage {
+  id String @id @default(uuid()) @db.Uuid
+  meetingId String @db.Uuid
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  role String
+  content String
+  kind String?
+  evidenceSegmentIds Json
+  createdAt DateTime @default(now())
+  @@index([meetingId, createdAt])
+}

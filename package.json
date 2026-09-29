@@ -1,0 +1,123 @@
+{
+  "name": "recallflow",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist-electron/main.cjs",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:web": "vite --host 127.0.0.1",
+    "build": "npm run typecheck && vite build && node scripts/build-electron.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "node --no-experimental-webstorage node_modules/vitest/vitest.mjs run",
+    "check": "npm run typecheck && npm run lint && npm test",
+    "db:generate": "prisma generate --schema packages/database/prisma/schema.prisma",
+    "db:migrate": "prisma migrate deploy --schema packages/database/prisma/schema.prisma",
+    "db:seed": "tsx scripts/seed.ts",
+    "package": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder",
+    "test:desktop": "npm run build && node scripts/smoke.mjs",
+    "test:packaged": "node scripts/packaged-smoke.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "@prisma/client": "^6.19.0",
+    "@tanstack/react-query": "^5.90.0",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^22.18.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@types/ws": "^8.18.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.0",
+    "dotenv": "^17.2.0",
+    "electron": "^41.0.0",
+    "electron-builder": "^26.0.0",
+    "esbuild": "^0.25.0",
+    "eslint": "^9.35.0",
+    "globals": "^16.3.0",
+    "jsdom": "^26.1.0",
+    "lucide-react": "^0.468.0",
+    "pino": "^9.6.0",
+    "playwright-core": "^1.63.0",
+    "postcss": "^8.5.0",
+    "prettier": "^3.6.0",
+    "prisma": "^6.19.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^3.4.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.42.0",
+    "vite": "^6.3.0",
+    "vitest": "^3.2.0",
+    "ws": "^8.18.0",
+    "zod": "^3.25.0",
+    "zod-to-json-schema": "^3.24.0",
+    "zustand": "^5.0.0"
+  },
+  "build": {
+    "appId": "app.recallflow.desktop",
+    "productName": "RecallFlow",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json",
+      "packages/database/generated/**/*"
+    ],
+    "asarUnpack": [
+      "packages/database/generated/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg"
+      ],
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "RecallFlow captures your microphone only when you start a meeting.",
+        "NSScreenCaptureUsageDescription": "RecallFlow can capture meeting system audio when you explicitly enable it."
+      },
+      "identity": "-",
+      "hardenedRuntime": true,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
+    "icon": "build/icon.png",
+    "electronDist": "node_modules/electron/dist"
+  },
+  "description": "A private desktop meeting notebook with live transcription, an always-on-top meeting control and grounded meeting notes \u2014 fully local with Whisper and Ollama, or with cloud providers.",
+  "author": "Aryan Yadav",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AryanYadav1010/RecallFlow.git"
+  },
+  "keywords": [
+    "electron",
+    "react",
+    "typescript",
+    "meeting-notes",
+    "transcription",
+    "whisper",
+    "ollama",
+    "local-llm",
+    "privacy"
+  ]
+}
